@@ -209,7 +209,7 @@ static int chroot_do_open(struct libos_handle* hdl, struct libos_dentry* dent, m
 
     int ret;
 
-    char* uri;
+    char* uri = NULL;
     ret = chroot_dentry_uri(dent, type, &uri);
     if (ret < 0)
         return ret;
