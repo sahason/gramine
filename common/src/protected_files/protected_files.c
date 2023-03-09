@@ -778,6 +778,8 @@ static bool ipf_init_new_file(pf_context_t* pf, const char* path) {
 
     pf->need_writing = true;
 
+    if (!ipf_internal_flush(pf))
+        return pf->last_error;
     return true;
 }
 

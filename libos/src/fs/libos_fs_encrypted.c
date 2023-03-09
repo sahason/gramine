@@ -39,7 +39,7 @@ static pf_status_t cb_read(pf_handle_t handle, void* buffer, uint64_t offset, si
 
         if (count == 0) {
             log_warning("EOF");
-            return PF_STATUS_SUCCESS;
+            return PF_STATUS_CALLBACK_FAILED;
         }
 
         assert(count <= remaining);
