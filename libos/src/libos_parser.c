@@ -1594,13 +1594,16 @@ static void print_syscall_name(struct print_buf* buf, const char* name, unsigned
 }
 
 void warn_unsupported_syscall(unsigned long sysno) {
-    if (sysno < ARRAY_SIZE(syscall_parser_table) && syscall_parser_table[sysno].name)
-        log_warning("Unsupported system call %s", syscall_parser_table[sysno].name);
-    else
-    {
-	if (strcmp(syscall_parser_table[sysno].name, "times") != 0) {
+    if (sysno < ARRAY_SIZE(syscall_parser_table) && syscall_parser_table[sysno].name) {
+	if (strcmp(syscall_parser_table[sysno].name, "times") != 0) 
+	{
+		
             log_warning("Unsupported system call %lu", sysno);
 	}
+     }
+    else
+    {
+            log_warning("Unsupported system call %lu", sysno);
     }
 }
 
