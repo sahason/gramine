@@ -328,7 +328,7 @@ static int _posix_lock_set(struct fs_lock* fs_lock, struct posix_lock* pl) {
         new->start = start;
         new->end = end;
         new->pid = pl->pid;
-        new->handle_id = pl->handle_id;
+        // new->handle_id = pl->handle_id;
 #ifdef DEBUG
         /* Assert that list order is preserved in `fcntl` */
         if (new->handle_id == 0) {
