@@ -128,7 +128,7 @@ static int flock_to_posix_lock(struct flock* fl, struct libos_handle* hdl, struc
     pl->start = start;
     pl->end = end;
     pl->pid = g_process.pid;
-    pl->handle_id = 0;
+    // pl->handle_id = 0;
     return 0;
 }
 
@@ -142,7 +142,7 @@ long libos_syscall_fcntl(int fd, int cmd, unsigned long arg) {
     struct libos_handle* hdl = get_fd_handle(fd, &flags, handle_map);
     if (!hdl)
         return -EBADF;
-    hdl->id = 0;
+    // hdl->id = 0;
 
     switch (cmd) {
         /* See `man fcntl` for the expected semantics of these commands. */
