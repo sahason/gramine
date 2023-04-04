@@ -156,18 +156,12 @@ static struct posix_lock* posix_lock_find_conflict(struct fs_lock* fs_lock, stru
     assert(pl->type != F_UNLCK);
 
     struct posix_lock* cur;
-    if (pl->handle_id == 0) {
-        LISTP_FOR_EACH_ENTRY(cur, &fs_lock->posix_locks, list) {
-            if (cur->pid != pl->pid && pl->start <= cur->end && cur->start <= pl->end
-                    && (cur->type == F_WRLCK || pl->type == F_WRLCK))
-                return cur;
-        }
-    } else {
+    
         LISTP_FOR_EACH_ENTRY(cur, &fs_lock->posix_locks, list) {
             if (cur->handle_id != pl->handle_id && (cur->type == F_WRLCK || pl->type == F_WRLCK))
                 return cur;
         }
-    }
+
     return NULL;
 }
 
@@ -226,7 +220,6 @@ static int _posix_lock_set(struct fs_lock* fs_lock, struct posix_lock* pl) {
 
     struct posix_lock* cur;
     struct posix_lock* tmp;
-    if (pl->handle_id == 0) {
         LISTP_FOR_EACH_ENTRY_SAFE(cur, tmp, &fs_lock->posix_locks, list) {
             if (cur->pid < pl->pid) {
                 prev = cur;
@@ -325,15 +318,7 @@ static int _posix_lock_set(struct fs_lock* fs_lock, struct posix_lock* pl) {
                 }
             }
         }
-    } else {
-        LISTP_FOR_EACH_ENTRY_SAFE(cur, tmp, &fs_lock->posix_locks, list) {
-            if (cur->handle_id == pl->handle_id) {
-                LISTP_DEL(cur, &fs_lock->posix_locks, list);
-                free(cur);
-                break;
-            }
-        }
-    }
+  
 
     if (new) {
         assert(pl->type != F_UNLCK);

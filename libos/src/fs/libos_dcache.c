@@ -472,6 +472,8 @@ static void dump_dentry(struct libos_dentry* dent, unsigned int level) {
     }
 }
 
+#undef DUMP_FLAG
+
 void dump_dcache(struct libos_dentry* dent) {
     lock(&g_dcache_lock);
 

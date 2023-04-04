@@ -37,21 +37,7 @@ long libos_syscall_setpgid(pid_t pid, pid_t pgid) {
     }
 
     if (!pid || g_process.pid == (IDTYPE)pid) {
-        lock(&g_process_id_lock);
-
-        IDTYPE pgid_to_set = (IDTYPE)pgid ?: g_process.pid;
-
-        /* TODO: Currently we do not support checking the process group of the joining process
-         * (specified by `pid`) and the existing process group to be joined (specified by `pgid`)
-         * must have the same session ID. */
-
-        if (g_process.pgid != pgid_to_set) {
-            g_process.pgid = pgid_to_set;
-            g_process.attached_to_pg = true;
-        }
-
-        unlock(&g_process_id_lock);
-
+        __atomic_store_n(&g_process.pgid, (IDTYPE)pgid ?: g_process.pid, __ATOMIC_RELEASE);
         /* TODO: inform parent about pgid change. */
         return 0;
     }
@@ -62,11 +48,7 @@ long libos_syscall_setpgid(pid_t pid, pid_t pgid) {
 
 long libos_syscall_getpgid(pid_t pid) {
     if (!pid || g_process.pid == (IDTYPE)pid) {
-        lock(&g_process_id_lock);
-        long ret = g_process.pgid;
-        unlock(&g_process_id_lock);
-
-        return ret;
+        return __atomic_load_n(&g_process.pgid, __ATOMIC_ACQUIRE);
     }
 
     /* TODO: Currently we do not support getting pgid of other processes.
@@ -79,38 +61,12 @@ long libos_syscall_getpgrp(void) {
 }
 
 long libos_syscall_setsid(void) {
-    lock(&g_process_id_lock);
-
-    IDTYPE current_pid = g_process.pid;
-    IDTYPE current_pgid = g_process.pgid;
-
-    /* If the caller is already a group leader or attached to a process group, a new session cannot
-     * be created. */
-    if (current_pid == current_pgid || g_process.attached_to_pg) {
-        unlock(&g_process_id_lock);
-        return -EPERM;
-    }
-
-    /* The calling process is the leader of the new session and the process group leader of the new
-     * process group. */
-    g_process.sid = current_pid;
-    g_process.pgid = current_pid;
-    g_process.attached_to_pg = true;
-
-    unlock(&g_process_id_lock);
-
-    return current_pid;
+    /* TODO: currently we do not support session management. */
+    return -ENOSYS;
 }
 
 long libos_syscall_getsid(pid_t pid) {
-    if (!pid || g_process.pid == (IDTYPE)pid) {
-        lock(&g_process_id_lock);
-        long ret = g_process.sid;
-        unlock(&g_process_id_lock);
-
-        return ret;
-    }
-
-    /* TODO: Currently we do not support getting sid of other processes. */
-    return -ESRCH;
+    /* TODO: currently we do not support session management. */
+    __UNUSED(pid);
+    return -ENOSYS;
 }

@@ -376,9 +376,7 @@ int do_kill_proc(IDTYPE sender, IDTYPE pid, int sig) {
 }
 
 int do_kill_pgroup(IDTYPE sender, IDTYPE pgid, int sig) {
-    lock(&g_process_id_lock);
-    IDTYPE current_pgid = g_process.pgid;
-    unlock(&g_process_id_lock);
+    IDTYPE current_pgid = __atomic_load_n(&g_process.pgid, __ATOMIC_ACQUIRE);
     if (!pgid) {
         pgid = current_pgid;
     }

@@ -105,20 +105,17 @@ static long do_waitid(int which, pid_t id, siginfo_t* infop, int options) {
     }
 
     if (options & WSTOPPED) {
-        log_warning("Ignoring unsupported WSTOPPED flag to waitid/wait4");
+        log_warning("Ignoring unsupported WSTOPPED flag to wait4");
         options &= ~WSTOPPED;
     }
     if (options & WCONTINUED) {
-        log_warning("Ignoring unsupported WCONTINUED flag to waitid/wait4");
+        log_warning("Ignoring unsupported WCONTINUED flag to wait4");
         options &= ~WCONTINUED;
     }
-    if (!(options & WEXITED)) {
-        log_error("Unsupported combination of flags passed to waitid/wait4");
-        return -EINVAL;
-    }
+    assert(options & WEXITED);
 
     if (options & __WNOTHREAD) {
-        log_warning("Ignoring unsupported __WNOTHREAD flag to waitid/wait4");
+        log_warning("Ignoring unsupported __WNOTHREAD flag to wait4");
         options &= ~__WNOTHREAD;
     }
 
