@@ -303,7 +303,7 @@ static int clear_posix_locks(struct libos_handle* handle) {
             .start = 0,
             .end = FS_LOCK_EOF,
             .pid = g_process.pid,
-            .handle_id = handle->id,
+            // .handle_id = handle->id,9
         };
         int ret = posix_lock_set(handle->dentry, &pl, /*block=*/false);
         if (ret < 0) {
@@ -328,9 +328,9 @@ struct libos_handle* detach_fd_handle(uint32_t fd, int* flags,
         handle = __detach_fd_handle(handle_map->map[fd], flags, handle_map);
 
     unlock(&handle_map->lock);
-    if (handle->id == 0 || handle->ref_count == 1) {
+    // if (handle->id == 0 || handle->ref_count == 1) {
         (void)clear_posix_locks(handle);
-    }
+    // }
 
     return handle;
 }
