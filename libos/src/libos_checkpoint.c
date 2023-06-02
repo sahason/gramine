@@ -7,7 +7,6 @@
 
 #include <stdarg.h>
 #include <stdint.h>
-
 #include "libos_checkpoint.h"
 #include "libos_flags_conv.h"
 #include "libos_internal.h"
@@ -611,8 +610,8 @@ int create_process_and_send_checkpoint(migrate_func_t migrate_func,
 
     ret = send_handles_on_stream(pal_process, &cpstore);
     if (ret < 0) {
-        log_error("failed sending PAL handles as part of checkpoint: %s %d",
-                  unix_strerror(ret), pal_process->process.stream);
+        log_error("failed sending PAL handles as part of checkpoint: %s",
+                  unix_strerror(ret));
         goto out;
     }
 

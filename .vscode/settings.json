@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "linux_utils.h": "c",
+        "pal_linux.h": "c"
+    }
+}
