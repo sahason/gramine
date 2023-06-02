@@ -611,8 +611,8 @@ int create_process_and_send_checkpoint(migrate_func_t migrate_func,
 
     ret = send_handles_on_stream(pal_process, &cpstore);
     if (ret < 0) {
-        log_error("failed sending PAL handles as part of checkpoint: %s",
-                  unix_strerror(ret));
+        log_error("failed sending PAL handles as part of checkpoint: %s %c",
+                  unix_strerror(ret), pal_process);
         goto out;
     }
 
