@@ -263,7 +263,7 @@ int _PalSendHandle(PAL_HANDLE target_process, PAL_HANDLE cargo) {
         ret = _PalStreamSecureWrite(target_process->process.ssl_ctx, (uint8_t*)hdl_data,
                                     hdl_hdr.data_size,
                                     /*is_blocking=*/!target_process->process.nonblocking);
-        log_error("_PalStreamSecureWrite");
+        log_error("_PalStreamSecureWrite %d",ret);
     } else {
         ret = ocall_write(fd, hdl_data, hdl_hdr.data_size);
         ret = ret < 0 ? unix_to_pal_error(ret) : ret;

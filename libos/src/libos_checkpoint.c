@@ -519,6 +519,7 @@ int create_process_and_send_checkpoint(migrate_func_t migrate_func,
                                        struct libos_child_process* child_process,
                                        struct libos_process* process_description,
                                        struct libos_thread* thread_description, ...) {
+    log_error("create_process_and_send_checkpoint begin");
     assert(child_process);
 
     int ret = 0;
@@ -663,7 +664,7 @@ out:
     if (ret < 0) {
         log_error("process creation failed");
     }
-
+    log_error("create_process_and_send_checkpoint end");
     return ret;
 }
 
