@@ -219,7 +219,7 @@ int _PalSendHandle(PAL_HANDLE target_process, PAL_HANDLE cargo) {
         .data_size = hdl_data_size
     };
     int fd = target_process->process.stream;
-    log_error("file handle %d", fd);
+    // log_error("file handle %d", fd);
 
     /* first send hdl_hdr so recipient knows how many FDs were transferred + how large is cargo */
     struct iovec iov = {
@@ -228,6 +228,7 @@ int _PalSendHandle(PAL_HANDLE target_process, PAL_HANDLE cargo) {
     };
     ret = ocall_send(fd, &iov, 1, NULL, 0, NULL, 0, 0);
     if (ret < 0) {
+        log_error("ocall_send");
         free(hdl_data);
         return unix_to_pal_error(ret);
     }
@@ -252,6 +253,7 @@ int _PalSendHandle(PAL_HANDLE target_process, PAL_HANDLE cargo) {
     iov.iov_len = DUMMYPAYLOADSIZE;
     ret = ocall_send(fd, &iov, 1, NULL, 0, control_hdr, control_hdr->cmsg_len, 0);
     if (ret < 0) {
+        log_error("ocall_send2");
         free(hdl_data);
         return unix_to_pal_error(ret);
     }
@@ -265,7 +267,7 @@ int _PalSendHandle(PAL_HANDLE target_process, PAL_HANDLE cargo) {
         ret = ocall_write(fd, hdl_data, hdl_hdr.data_size);
         ret = ret < 0 ? unix_to_pal_error(ret) : ret;
     }
-
+    log_error("at the end");
     free(hdl_data);
     return ret < 0 ? ret : 0;
 }
