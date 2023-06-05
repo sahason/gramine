@@ -153,13 +153,18 @@ int handle_deserialize(PAL_HANDLE* handle, const void* data, size_t size) {
 
 int _PalSendHandle(PAL_HANDLE target_process, PAL_HANDLE cargo) {
     if (target_process->hdr.type != PAL_TYPE_PROCESS)
+    {
+        log_error("File linux _PalSendHandle line number 157");
         return -PAL_ERROR_BADHANDLE;
-
+    }
     /* serialize cargo handle into a blob hdl_data */
     void* hdl_data = NULL;
     ssize_t hdl_data_size = handle_serialize(cargo, &hdl_data);
     if (hdl_data_size < 0)
+    {
+        log_error("File linux _PalSendHandle line number 165");
         return hdl_data_size;
+    }
 
     ssize_t ret;
     struct hdl_header hdl_hdr = {
@@ -179,6 +184,7 @@ int _PalSendHandle(PAL_HANDLE target_process, PAL_HANDLE cargo) {
 
     ret = DO_SYSCALL(sendmsg, fd, &message_hdr, MSG_NOSIGNAL);
     if (ret < 0) {
+        log_error("File linux _PalSendHandle line number 187");
         free(hdl_data);
         return unix_to_pal_error(ret);
     }
@@ -208,11 +214,16 @@ int _PalSendHandle(PAL_HANDLE target_process, PAL_HANDLE cargo) {
 
     ret = DO_SYSCALL(sendmsg, fd, &message_hdr, 0);
     if (ret < 0) {
+        log_error("File linux _PalSendHandle line number 217");
         free(hdl_data);
         return unix_to_pal_error(ret);
     }
 
     free(hdl_data);
+    if (ret < 0)
+    {
+        log_error("File linux _PalSendHandle line number 225");
+    }
     return ret < 0 ? unix_to_pal_error(ret) : 0;
 }
 

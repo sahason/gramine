@@ -205,8 +205,10 @@ static int handle_deserialize(PAL_HANDLE* handle, const void* data, size_t size,
 
 int _PalSendHandle(PAL_HANDLE target_process, PAL_HANDLE cargo) {
     if (target_process->hdr.type != PAL_TYPE_PROCESS)
+    {
+        log_error("linux-sgx pal_streams.c line number 209");
         return -PAL_ERROR_BADHANDLE;
-
+    }
     /* serialize cargo handle into a blob hdl_data */
     void* hdl_data = NULL;
     ssize_t hdl_data_size = handle_serialize(cargo, &hdl_data);
@@ -228,7 +230,7 @@ int _PalSendHandle(PAL_HANDLE target_process, PAL_HANDLE cargo) {
     };
     ret = ocall_send(fd, &iov, 1, NULL, 0, NULL, 0, 0);
     if (ret < 0) {
-        log_error("File libos-checkpoint.c line 231 ret %d",ret);
+        log_error("File libos-checkpoint.c line 233 ret %d",ret);
         free(hdl_data);
         return unix_to_pal_error(ret);
     }
@@ -253,7 +255,7 @@ int _PalSendHandle(PAL_HANDLE target_process, PAL_HANDLE cargo) {
     iov.iov_len = DUMMYPAYLOADSIZE;
     ret = ocall_send(fd, &iov, 1, NULL, 0, control_hdr, control_hdr->cmsg_len, 0);
     if (ret < 0) {
-        log_error("File libos-checkpoint.c line 256 ret %d",ret);
+        log_error("File libos-checkpoint.c line 258 ret %d",ret);
         free(hdl_data);
         return unix_to_pal_error(ret);
     }
@@ -279,7 +281,7 @@ int _PalSendHandle(PAL_HANDLE target_process, PAL_HANDLE cargo) {
     free(hdl_data);
     if (ret < 0)
     {
-        log_error("ret %d", ret);
+        log_error("_PalSendHandle linux-sgx ret %d", ret);
     }
     return ret < 0 ? ret : 0;
 }
