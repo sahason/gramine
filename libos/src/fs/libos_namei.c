@@ -420,7 +420,8 @@ int dentry_open(struct libos_handle* hdl, struct libos_dentry* dent, int flags) 
 
         if (!(fs->fs_ops && fs->fs_ops->truncate))
         {
-            log_error("ret %d",ret);
+            
+            log_error("fs %s ret %d",fs->name , ret);
             return -EINVAL;
         }
         ret = fs->fs_ops->truncate(hdl, 0);
