@@ -109,8 +109,10 @@ long libos_syscall_openat(int dfd, const char* filename, int flags, int mode) {
     if (   (flags & O_ACCMODE) != O_RDONLY
         && (flags & O_ACCMODE) != O_WRONLY
         && (flags & O_ACCMODE) != O_RDWR)
+    {
+        log_error("flags & O_ACCMODE");
         return -EINVAL;
-
+    }
     /* TODO: fail explicitly on valid but unsupported flags. */
 
     if (flags & O_PATH) {
@@ -138,8 +140,10 @@ long libos_syscall_openat(int dfd, const char* filename, int flags, int mode) {
     int ret = 0;
 
     if (*filename != '/' && (ret = get_dirfd_dentry(dfd, &dir)) < 0)
+    {
+        log_error("ret %d",ret);
         return ret;
-
+    }
     struct libos_handle* hdl = get_new_handle();
     if (!hdl) {
         ret = -ENOMEM;
@@ -148,6 +152,7 @@ long libos_syscall_openat(int dfd, const char* filename, int flags, int mode) {
 
     ret = open_namei(hdl, dir, filename, flags, mode, NULL);
     if (ret < 0) {
+        log_error("ret %d");
         /* If this was blocking `open` (e.g. on FIFO), it might have returned `-EINTR`. */
         if (ret == -EINTR) {
             ret = -ERESTARTSYS;
@@ -156,6 +161,10 @@ long libos_syscall_openat(int dfd, const char* filename, int flags, int mode) {
     }
 
     ret = set_new_fd_handle(hdl, flags & O_CLOEXEC ? FD_CLOEXEC : 0, NULL);
+    if (ret < 0)
+    {
+        log_error("ret %d");
+    }
 
 out_hdl:
     put_handle(hdl);
