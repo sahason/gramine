@@ -407,7 +407,7 @@ int PalStreamFlush(PAL_HANDLE handle) {
 
 int PalSendHandle(PAL_HANDLE target_process, PAL_HANDLE cargo) {
     if (!target_process || !cargo) {
-        log_error("!target_process || !cargo");
+        log_error("File name libos_checkpoint.c line number 410");
         return -PAL_ERROR_INVAL;
     }
 
