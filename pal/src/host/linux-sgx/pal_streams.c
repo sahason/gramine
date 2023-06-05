@@ -210,10 +210,9 @@ static int handle_deserialize(PAL_HANDLE* handle, const void* data, size_t size,
 }
 
 int _PalSendHandle(PAL_HANDLE target_process, PAL_HANDLE cargo) {
-    log_error("_PalSendHandle begin");
     if (target_process->hdr.type != PAL_TYPE_PROCESS)
     {
-        log_error("linux-sgx pal_streams.c line number 209");
+        log_error("target_process->hdr.type != PAL_TYPE_PROCESS");
         return -PAL_ERROR_BADHANDLE;
     }
     /* serialize cargo handle into a blob hdl_data */
@@ -221,7 +220,7 @@ int _PalSendHandle(PAL_HANDLE target_process, PAL_HANDLE cargo) {
     ssize_t hdl_data_size = handle_serialize(cargo, &hdl_data);
     if (hdl_data_size < 0)
     {
-        log_error("linux-sgx pal_streams.c line number 217 hdl_data_size %d", hdl_data_size);
+        log_error("hdl_data_size %d", hdl_data_size);
         return hdl_data_size;
     }
     ssize_t ret;
@@ -230,7 +229,6 @@ int _PalSendHandle(PAL_HANDLE target_process, PAL_HANDLE cargo) {
         .data_size = hdl_data_size
     };
     int fd = target_process->process.stream;
-    // log_error("file handle %d", fd);
 
     /* first send hdl_hdr so recipient knows how many FDs were transferred + how large is cargo */
     struct iovec iov = {
@@ -239,7 +237,7 @@ int _PalSendHandle(PAL_HANDLE target_process, PAL_HANDLE cargo) {
     };
     ret = ocall_send(fd, &iov, 1, NULL, 0, NULL, 0, 0);
     if (ret < 0) {
-        log_error("File libos-checkpoint.c line 233 ret %d",ret);
+        log_error("ret %d",ret);
         free(hdl_data);
         return unix_to_pal_error(ret);
     }
@@ -264,7 +262,7 @@ int _PalSendHandle(PAL_HANDLE target_process, PAL_HANDLE cargo) {
     iov.iov_len = DUMMYPAYLOADSIZE;
     ret = ocall_send(fd, &iov, 1, NULL, 0, control_hdr, control_hdr->cmsg_len, 0);
     if (ret < 0) {
-        log_error("File libos-checkpoint.c line 258 ret %d",ret);
+        log_error("ret %d",ret);
         free(hdl_data);
         return unix_to_pal_error(ret);
     }
@@ -276,23 +274,21 @@ int _PalSendHandle(PAL_HANDLE target_process, PAL_HANDLE cargo) {
                                     /*is_blocking=*/!target_process->process.nonblocking);
         if (ret < 0)
         {
-            log_error("_PalStreamSecureWrite ret %d",ret);
+            log_error("ret %d",ret);
         }
     } else {
         ret = ocall_write(fd, hdl_data, hdl_hdr.data_size);
         ret = ret < 0 ? unix_to_pal_error(ret) : ret;
         if (ret < 0)
         {
-            log_error("ocall_write ret %d",ret);
+            log_error("ret %d",ret);
         }
     }
-    // log_error("at the end");
     free(hdl_data);
     if (ret < 0)
     {
-        log_error("_PalSendHandle linux-sgx ret %d", ret);
+        log_error("ret %d", ret);
     }
-    log_error("_PalSendHandle end");
     return ret < 0 ? ret : 0;
 }
 

@@ -387,11 +387,19 @@ int dentry_open(struct libos_handle* hdl, struct libos_dentry* dent, int flags) 
     struct libos_fs* fs = dent->inode->fs;
 
     if (!(fs->d_ops && fs->d_ops->open))
+    {
+        log_error("ret %d",ret);
         return -EINVAL;
+    }
+        
 
     ret = fs->d_ops->open(hdl, dent, flags);
     if (ret < 0)
+    {
+        log_error("ret %d",ret);
         return ret;
+
+    }
 
     assoc_handle_with_dentry(hdl, dent, flags);
 
@@ -411,11 +419,16 @@ int dentry_open(struct libos_handle* hdl, struct libos_dentry* dent, int flags) 
             && (dent->inode->type != S_IFLNK)) {
 
         if (!(fs->fs_ops && fs->fs_ops->truncate))
+        {
+            log_error("ret %d",ret);
             return -EINVAL;
-
+        }
         ret = fs->fs_ops->truncate(hdl, 0);
         if (ret < 0)
+        {
+            log_error("ret %d",ret);
             return ret;
+        }
     }
 
     return 0;
