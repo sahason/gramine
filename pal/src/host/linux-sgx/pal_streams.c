@@ -204,6 +204,7 @@ static int handle_deserialize(PAL_HANDLE* handle, const void* data, size_t size,
 }
 
 int _PalSendHandle(PAL_HANDLE target_process, PAL_HANDLE cargo) {
+    log_error("_PalSendHandle begin");
     if (target_process->hdr.type != PAL_TYPE_PROCESS)
     {
         log_error("linux-sgx pal_streams.c line number 209");
@@ -213,8 +214,10 @@ int _PalSendHandle(PAL_HANDLE target_process, PAL_HANDLE cargo) {
     void* hdl_data = NULL;
     ssize_t hdl_data_size = handle_serialize(cargo, &hdl_data);
     if (hdl_data_size < 0)
+    {
+        log_error("linux-sgx pal_streams.c line number 217 hdl_data_size %d", hdl_data_size);
         return hdl_data_size;
-
+    }
     ssize_t ret;
     struct hdl_header hdl_hdr = {
         .has_fd = cargo->flags & (PAL_HANDLE_FD_READABLE | PAL_HANDLE_FD_WRITABLE),
@@ -283,6 +286,7 @@ int _PalSendHandle(PAL_HANDLE target_process, PAL_HANDLE cargo) {
     {
         log_error("_PalSendHandle linux-sgx ret %d", ret);
     }
+    log_error("_PalSendHandle end");
     return ret < 0 ? ret : 0;
 }
 
