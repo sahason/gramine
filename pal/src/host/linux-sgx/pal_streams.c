@@ -81,14 +81,20 @@ static ssize_t handle_serialize(PAL_HANDLE handle, void** data) {
                 ret = _PalStreamSecureSave(handle->process.ssl_ctx, (const uint8_t**)&field,
                                            &field_size);
                 if (ret < 0)
+                {
+                    log_error("pal_stream.c line 85 %d", ret);
                     return -PAL_ERROR_DENIED;
+                }
             }
             break;
         case PAL_TYPE_EVENTFD:
             /* eventfds have no fields to serialize */
             break;
         default:
+        {
+            log_error("pal_stream.c line 95 %d", ret);
             return -PAL_ERROR_INVAL;
+        }
     }
 
     size_t hdl_size = handle_size(handle);
