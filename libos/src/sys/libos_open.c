@@ -152,7 +152,7 @@ long libos_syscall_openat(int dfd, const char* filename, int flags, int mode) {
 
     ret = open_namei(hdl, dir, filename, flags, mode, NULL);
     if (ret < 0) {
-        log_error("ret %d");
+        log_error("ret %d", ret);
         /* If this was blocking `open` (e.g. on FIFO), it might have returned `-EINTR`. */
         if (ret == -EINTR) {
             ret = -ERESTARTSYS;

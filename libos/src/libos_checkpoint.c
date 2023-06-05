@@ -291,7 +291,7 @@ static int send_handles_on_stream(PAL_HANDLE stream, struct libos_cp_store* stor
             continue;
         }
         if (ret < 0) {
-            log_error("File libos_checkpoint.c line 288 ret = %d",ret);
+            log_error("ret = %d",ret);
             ret = pal_to_unix_errno(ret);
             goto out;
         }
@@ -526,7 +526,6 @@ int create_process_and_send_checkpoint(migrate_func_t migrate_func,
                                        struct libos_child_process* child_process,
                                        struct libos_process* process_description,
                                        struct libos_thread* thread_description, ...) {
-    log_error("create_process_and_send_checkpoint begin");
     assert(child_process);
 
     int ret = 0;
@@ -671,7 +670,6 @@ out:
     if (ret < 0) {
         log_error("process creation failed");
     }
-    log_error("create_process_and_send_checkpoint end");
     return ret;
 }
 

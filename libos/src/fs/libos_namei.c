@@ -439,7 +439,10 @@ int open_namei(struct libos_handle* hdl, struct libos_dentry* start, const char*
 
     ret = path_lookupat(start, path, lookup_flags, &dent);
     if (ret < 0)
+    {
+        log_error("ret %d", ret);
         goto out;
+    }
 
     if (flags & O_PATH) {
         if (!dent->inode) {
@@ -488,7 +491,10 @@ int open_namei(struct libos_handle* hdl, struct libos_dentry* start, const char*
         if (dir) {
             ret = check_permissions(dir, MAY_WRITE | MAY_EXEC);
             if (ret < 0)
+            {
+                log_error("ret %d", ret);
                 goto out;
+            }
         }
 
         struct libos_fs* fs = dent->mount->fs;
@@ -496,20 +502,28 @@ int open_namei(struct libos_handle* hdl, struct libos_dentry* start, const char*
          * not supported for this filesystem. */
         if (flags & O_DIRECTORY) {
             if (!fs->d_ops->mkdir) {
+                log_error("ret %d", ret);
                 ret = -EINVAL;
                 goto out;
             }
             ret = fs->d_ops->mkdir(dent, mode & ~S_IFMT);
             if (ret < 0)
+            {
+                log_error("ret %d", ret);
                 goto out;
+            }
         } else {
             if (!fs->d_ops->creat) {
+                log_error("ret %d", ret);
                 ret = -EINVAL;
                 goto out;
             }
             ret = fs->d_ops->creat(hdl, dent, flags, mode & ~S_IFMT);
             if (ret < 0)
+            {
+                log_error("ret %d", ret);
                 goto out;
+            }
             assoc_handle_with_dentry(hdl, dent, flags);
             need_open = false;
         }
@@ -524,13 +538,19 @@ int open_namei(struct libos_handle* hdl, struct libos_dentry* start, const char*
          * file is allowed to have a mode that's incompatible with `acc_mode`. */
         ret = check_permissions(dent, acc_mode);
         if (ret < 0)
+        {
+            log_error("ret %d", ret);   
             goto out;
+        }
     }
 
     if (hdl && need_open) {
         ret = dentry_open(hdl, dent, flags);
         if (ret < 0)
+        {
+            log_error("ret %d", ret);
             goto out;
+        }
     }
 
     ret = 0;
