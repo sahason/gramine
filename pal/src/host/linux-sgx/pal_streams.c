@@ -92,7 +92,7 @@ static ssize_t handle_serialize(PAL_HANDLE handle, void** data) {
             break;
         default:
         {
-            log_error("pal_stream.c line 95 %d", ret);
+            log_error("pal_stream.c line 95 %d handle->hdr.type %d", ret, handle->hdr.type);
             return -PAL_ERROR_INVAL;
         }
     }
