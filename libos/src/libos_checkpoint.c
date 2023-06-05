@@ -284,6 +284,12 @@ static int send_handles_on_stream(PAL_HANDLE stream, struct libos_cp_store* stor
     for (size_t i = 0; i < entries_cnt; i++) {
         /* we need to abort migration if PalSendHandle() returned error, otherwise app may fail */
         ret = PalSendHandle(stream, entries[i]->handle);
+
+        // Experiment
+        if (ret == -4 || ret == -6)
+        {
+            continue;
+        }
         if (ret < 0) {
             log_error("File libos_checkpoint.c line 288 ret = %d",ret);
             ret = pal_to_unix_errno(ret);
