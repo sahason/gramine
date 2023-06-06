@@ -237,7 +237,7 @@ int _PalSendHandle(PAL_HANDLE target_process, PAL_HANDLE cargo) {
     };
     ret = ocall_send(fd, &iov, 1, NULL, 0, NULL, 0, 0);
     if (ret < 0) {
-        log_error("ret %d",ret);
+        // log_error("ret %d",ret);
         free(hdl_data);
         return unix_to_pal_error(ret);
     }
@@ -262,7 +262,7 @@ int _PalSendHandle(PAL_HANDLE target_process, PAL_HANDLE cargo) {
     iov.iov_len = DUMMYPAYLOADSIZE;
     ret = ocall_send(fd, &iov, 1, NULL, 0, control_hdr, control_hdr->cmsg_len, 0);
     if (ret < 0) {
-        log_error("ret %d",ret);
+        // log_error("ret %d",ret);
         free(hdl_data);
         return unix_to_pal_error(ret);
     }
@@ -274,21 +274,17 @@ int _PalSendHandle(PAL_HANDLE target_process, PAL_HANDLE cargo) {
                                     /*is_blocking=*/!target_process->process.nonblocking);
         if (ret < 0)
         {
-            log_error("ret %d",ret);
+            // log_error("ret %d",ret);
         }
     } else {
         ret = ocall_write(fd, hdl_data, hdl_hdr.data_size);
         ret = ret < 0 ? unix_to_pal_error(ret) : ret;
         if (ret < 0)
         {
-            log_error("ret %d",ret);
+            // log_error("ret %d",ret);
         }
     }
     free(hdl_data);
-    if (ret < 0)
-    {
-        log_error("ret %d", ret);
-    }
     return ret < 0 ? ret : 0;
 }
 

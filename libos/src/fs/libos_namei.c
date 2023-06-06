@@ -388,7 +388,7 @@ int dentry_open(struct libos_handle* hdl, struct libos_dentry* dent, int flags) 
 
     if (!(fs->d_ops && fs->d_ops->open))
     {
-        log_error("ret %d",ret);
+        // log_error("ret %d",ret);
         return -EINVAL;
     }
         
@@ -396,7 +396,7 @@ int dentry_open(struct libos_handle* hdl, struct libos_dentry* dent, int flags) 
     ret = fs->d_ops->open(hdl, dent, flags);
     if (ret < 0)
     {
-        log_error("ret %d",ret);
+        // log_error("ret %d",ret);
         return ret;
 
     }
@@ -427,7 +427,7 @@ int dentry_open(struct libos_handle* hdl, struct libos_dentry* dent, int flags) 
         ret = fs->fs_ops->truncate(hdl, 0);
         if (ret < 0)
         {
-            log_error("ret %d",ret);
+            // log_error("ret %d",ret);
             return ret;
         }
     }
@@ -454,7 +454,7 @@ int open_namei(struct libos_handle* hdl, struct libos_dentry* start, const char*
     ret = path_lookupat(start, path, lookup_flags, &dent);
     if (ret < 0)
     {
-        log_error("ret %d", ret);
+        // log_error("ret %d", ret);
         goto out;
     }
 
@@ -506,7 +506,7 @@ int open_namei(struct libos_handle* hdl, struct libos_dentry* start, const char*
             ret = check_permissions(dir, MAY_WRITE | MAY_EXEC);
             if (ret < 0)
             {
-                log_error("ret %d", ret);
+                // log_error("ret %d", ret);
                 goto out;
             }
         }
@@ -516,26 +516,26 @@ int open_namei(struct libos_handle* hdl, struct libos_dentry* start, const char*
          * not supported for this filesystem. */
         if (flags & O_DIRECTORY) {
             if (!fs->d_ops->mkdir) {
-                log_error("ret %d", ret);
+                // log_error("ret %d", ret);
                 ret = -EINVAL;
                 goto out;
             }
             ret = fs->d_ops->mkdir(dent, mode & ~S_IFMT);
             if (ret < 0)
             {
-                log_error("ret %d", ret);
+                // log_error("ret %d", ret);
                 goto out;
             }
         } else {
             if (!fs->d_ops->creat) {
-                log_error("ret %d", ret);
+                // log_error("ret %d", ret);
                 ret = -EINVAL;
                 goto out;
             }
             ret = fs->d_ops->creat(hdl, dent, flags, mode & ~S_IFMT);
             if (ret < 0)
             {
-                log_error("ret %d", ret);
+                // log_error("ret %d", ret);
                 goto out;
             }
             assoc_handle_with_dentry(hdl, dent, flags);
@@ -553,7 +553,7 @@ int open_namei(struct libos_handle* hdl, struct libos_dentry* start, const char*
         ret = check_permissions(dent, acc_mode);
         if (ret < 0)
         {
-            log_error("ret %d", ret);   
+            // log_error("ret %d", ret);   
             goto out;
         }
     }
@@ -562,7 +562,7 @@ int open_namei(struct libos_handle* hdl, struct libos_dentry* start, const char*
         ret = dentry_open(hdl, dent, flags);
         if (ret < 0)
         {
-            log_error("ret %d", ret);
+            // log_error("ret %d", ret);
             goto out;
         }
     }
