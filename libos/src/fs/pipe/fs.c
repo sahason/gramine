@@ -101,6 +101,16 @@ static ssize_t pipe_read(struct libos_handle* hdl, void* buf, size_t count, file
     return (ssize_t)count;
 }
 
+static int pipe_truncate(struct libos_handle* hdl, file_off_t size) {
+    assert(hdl->type == TYPE_PIPE);
+
+    int ret=0;
+
+
+    return ret;
+}
+
+
 static ssize_t pipe_write(struct libos_handle* hdl, const void* buf, size_t count,
                           file_off_t* pos) {
     assert(hdl->type == TYPE_PIPE);
@@ -287,6 +297,7 @@ static struct libos_fs_ops fifo_fs_ops = {
     .read     = &pipe_read,
     .write    = &pipe_write,
     .setflags = &pipe_setflags,
+    .truncate = &pipe_truncate,
 };
 
 static struct libos_d_ops fifo_d_ops = {
