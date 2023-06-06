@@ -70,6 +70,7 @@ typedef struct {
 #include "pal_host.h"
 
 static inline void init_handle_hdr(PAL_HANDLE handle, int pal_type) {
+    log_error("pal_type %d", pal_type);
     handle->hdr.type = pal_type;
 }
 

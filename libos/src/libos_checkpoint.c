@@ -145,6 +145,7 @@ BEGIN_CP_FUNC(palhdl_ptr) {
     struct libos_palhdl_entry* entry = (void*)(base + off);
 
     entry->handle  = *(PAL_HANDLE*)obj;
+    log_error("entry->handle");
     entry->phandle = NULL;
     entry->prev    = store->last_palhdl_entry;
 

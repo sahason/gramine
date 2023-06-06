@@ -1,6 +1,8 @@
 {
     "files.associations": {
         "linux_utils.h": "c",
-        "pal_linux.h": "c"
+        "pal_linux.h": "c",
+        "atomic": "c",
+        "typeinfo": "c"
     }
 }
