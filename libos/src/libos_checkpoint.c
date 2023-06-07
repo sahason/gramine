@@ -286,10 +286,10 @@ static int send_handles_on_stream(PAL_HANDLE stream, struct libos_cp_store* stor
         ret = PalSendHandle(stream, entries[i]->handle);
 
         // // Experiment
-        // if (ret == -4 || ret == -6)
-        // {
-        //     continue;
-        // }
+        if (ret == -4 || ret == -6)
+        {
+            continue;
+        }
         if (ret < 0) {
             log_error("ret = %d",ret);
             ret = pal_to_unix_errno(ret);
