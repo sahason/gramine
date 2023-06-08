@@ -56,7 +56,10 @@ static ssize_t handle_serialize(PAL_HANDLE handle, void** data) {
                 ret = _PalStreamSecureSave(handle->pipe.ssl_ctx, (const uint8_t**)&field,
                                            &field_size);
                 if (ret < 0)
+                {
+                    log_error("ret %d handle->hdr.type %d", ret, handle->hdr.type);
                     return -PAL_ERROR_DENIED;
+                }
             }
             /* no need to serialize handshake_helper_thread_hdl */
             break;
