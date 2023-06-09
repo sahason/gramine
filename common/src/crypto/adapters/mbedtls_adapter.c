@@ -430,6 +430,7 @@ int lib_SSLSave(LIB_SSL_CONTEXT* ssl_ctx, uint8_t* buf, size_t buf_size, size_t*
     if (ret == MBEDTLS_ERR_SSL_BUFFER_TOO_SMALL) {
         return -PAL_ERROR_NOMEM;
     } else if (ret < 0) {
+        log_error("lib_SSLSave line 433 ret %d",ret);
         return -PAL_ERROR_DENIED;
     }
     return 0;
