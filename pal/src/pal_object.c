@@ -40,7 +40,7 @@ int _PalObjectClose(PAL_HANDLE object_handle) {
 /* PAL call PalObjectClose: Close the given object handle. */
 void PalObjectClose(PAL_HANDLE object_handle) {
     assert(object_handle);
-    log_error("Pal handle %d", object_handle);
+    // log_error("Pal handle %d", object_handle);
     _PalObjectClose(object_handle);
 }
 

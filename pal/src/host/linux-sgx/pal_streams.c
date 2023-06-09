@@ -232,6 +232,7 @@ int _PalSendHandle(PAL_HANDLE target_process, PAL_HANDLE cargo) {
         .data_size = hdl_data_size
     };
     int fd = target_process->process.stream;
+    log_error(" _PalSendHandle File handle %d", fd);
 
     /* first send hdl_hdr so recipient knows how many FDs were transferred + how large is cargo */
     struct iovec iov = {
