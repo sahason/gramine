@@ -1390,8 +1390,10 @@ int _PalStreamSecureSave(LIB_SSL_CONTEXT* ssl_ctx, const uint8_t** obuf, size_t*
     /* figure out the required buffer size */
     ret = lib_SSLSave(ssl_ctx, NULL, 0, olen);
     if (ret != 0 && ret != -PAL_ERROR_NOMEM)
+    {
+        log_error("ret %d", ret);
         return ret;
-
+    }
     /* create the required buffer */
     size_t len   = *olen;
     uint8_t* buf = malloc(len);
