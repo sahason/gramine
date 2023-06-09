@@ -220,7 +220,7 @@ static int64_t file_write(PAL_HANDLE handle, uint64_t offset, uint64_t count, co
 /* 'close' operation for file streams */
 static int file_close(PAL_HANDLE handle) {
     int fd = handle->file.fd;
-
+    log_error("close file handle %d", handle->file.fd);
     if (handle->file.chunk_hashes && handle->file.total) {
         /* case of trusted file: the whole file was mmapped in untrusted memory */
         ocall_munmap_untrusted(handle->file.umem, handle->file.total);
@@ -633,6 +633,7 @@ out:
 
 /* 'close' operation of directory streams */
 static int dir_close(PAL_HANDLE handle) {
+    log_error("close file handle %d", handle->dir.fd);
     int fd = handle->dir.fd;
 
     ocall_close(fd);

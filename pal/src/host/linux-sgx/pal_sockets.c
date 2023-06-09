@@ -150,6 +150,7 @@ int _PalSocketCreate(enum pal_socket_domain domain, enum pal_socket_type type,
 }
 
 static int close(PAL_HANDLE handle) {
+    log_error("close file handle %d", handle->sock.fd);
     int ret = ocall_close(handle->sock.fd);
     if (ret < 0) {
         log_error("closing socket fd failed: %s", unix_strerror(ret));

@@ -120,6 +120,7 @@ static int eventfd_pal_attrquerybyhdl(PAL_HANDLE handle, PAL_STREAM_ATTR* attr) 
 }
 
 static int eventfd_pal_close(PAL_HANDLE handle) {
+    log_error("close file handle %d", handle->eventfd.fd);
     if (handle->hdr.type == PAL_TYPE_EVENTFD) {
         if (handle->eventfd.fd != PAL_IDX_POISON) {
             ocall_close(handle->eventfd.fd);

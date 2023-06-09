@@ -284,6 +284,7 @@ static int64_t proc_write(PAL_HANDLE handle, uint64_t offset, uint64_t count, co
 
 static int proc_close(PAL_HANDLE handle) {
     // log_error("closed fd %d", handle->process.stream);
+    log_error("close file handle %d", handle->process.stream);
     if (handle->process.stream != PAL_IDX_POISON) {
         ocall_close(handle->process.stream);
         handle->process.stream = PAL_IDX_POISON;
