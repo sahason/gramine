@@ -95,7 +95,7 @@ static ssize_t handle_serialize(PAL_HANDLE handle, void** data) {
             break;
         default:
         {
-            log_error("handle %x ret %d handle->hdr.type %d", handle, ret, handle->hdr.type);
+            log_error("Palsendhandle handle %x ret %d handle->hdr.type %d", handle, -PAL_ERROR_INVAL, handle->hdr.type);
             return -PAL_ERROR_INVAL;
         }
     }
@@ -232,7 +232,6 @@ int _PalSendHandle(PAL_HANDLE target_process, PAL_HANDLE cargo) {
         .data_size = hdl_data_size
     };
     int fd = target_process->process.stream;
-    log_error(" _PalSendHandle File handle %d", fd);
 
     /* first send hdl_hdr so recipient knows how many FDs were transferred + how large is cargo */
     struct iovec iov = {
