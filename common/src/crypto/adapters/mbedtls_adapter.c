@@ -428,38 +428,6 @@ int lib_SSLWrite(LIB_SSL_CONTEXT* ssl_ctx, const uint8_t* buf, size_t buf_size) 
 
 int lib_SSLSave(LIB_SSL_CONTEXT* ssl_ctx, uint8_t* buf, size_t buf_size, size_t* out_size) {
     int ret = mbedtls_ssl_context_save(&ssl_ctx->ssl, buf, buf_size, out_size);
-    mbedtls_ssl_context* ssl = &ssl_ctx->ssl;
-    if( mbedtls_ssl_is_handshake_over(ssl) == 0 )
-    {
-        log_error( "Initial handshake isn't over" );
-        return -PAL_ERROR_DENIED;
-    }
-    // if( ssl->handshake != NULL )
-    // {
-    //     log_error( "Handshake isn't completed" );
-    //     log_error("lib_SSLSave line 433 ret %d",ret);
-    //     return -PAL_ERROR_DENIED;
-    // }
-    /* Double-check that sub-structures are indeed ready */
-    // if( ssl->transform == NULL || ssl->session == NULL )
-    // {
-    //     log_error( "Serialised structures aren't ready" );
-    //     log_error("lib_SSLSave line 433 ret %d",ret);
-    //     return -PAL_ERROR_DENIED;
-    // }
-    /* There must be no pending incoming or outgoing data */
-    if( mbedtls_ssl_check_pending( ssl ) != 0 )
-    {
-        log_error("There is pending incoming data" );
-        log_error("lib_SSLSave line 433 ret %d",ret);
-        return -PAL_ERROR_DENIED;
-    }
-    // if( (&(ssl_ctx->ssl))->out_left != 0 )
-    // {
-    //     log_error( "There is pending outgoing data" );
-    //     log_error("lib_SSLSave line 433 ret %d",ret);
-    //     return -PAL_ERROR_DENIED;
-    // }
     if (ret == MBEDTLS_ERR_SSL_BUFFER_TOO_SMALL) {
         return -PAL_ERROR_NOMEM;
     } else if (ret < 0) {
