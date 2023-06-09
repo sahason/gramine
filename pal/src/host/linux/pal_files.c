@@ -116,7 +116,6 @@ static int64_t file_write(PAL_HANDLE handle, uint64_t offset, uint64_t count, co
 /* 'close' operation for file streams */
 static int file_close(PAL_HANDLE handle) {
     int fd = handle->file.fd;
-    log_error("close File handle %d", fd);
 
     int ret = DO_SYSCALL(close, fd);
 

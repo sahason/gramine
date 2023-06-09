@@ -418,7 +418,6 @@ static int64_t pipe_write(PAL_HANDLE handle, uint64_t offset, uint64_t len, cons
  * \returns 0 on success, negative PAL error code otherwise.
  */
 static int pipe_close(PAL_HANDLE handle) {
-    log_error("close file handle %d", handle->pipe.fd);
     if (handle->pipe.fd != PAL_IDX_POISON) {
         while (!__atomic_load_n(&handle->pipe.handshake_done, __ATOMIC_ACQUIRE))
             CPU_RELAX();

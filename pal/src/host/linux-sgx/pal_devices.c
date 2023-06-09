@@ -115,7 +115,6 @@ static int64_t dev_write(PAL_HANDLE handle, uint64_t offset, uint64_t size, cons
 }
 
 static int dev_close(PAL_HANDLE handle) {
-    log_error("close file handle %d", handle->dev.fd);
     if (handle->hdr.type != PAL_TYPE_DEV)
         return -PAL_ERROR_INVAL;
 

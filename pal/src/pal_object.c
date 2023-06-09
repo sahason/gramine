@@ -10,6 +10,7 @@
 #include "pal_internal.h"
 
 int _PalObjectClose(PAL_HANDLE object_handle) {
+    log_error("close handle %x", object_handle);
     const struct handle_ops* ops = HANDLE_OPS(object_handle);
     if (!ops)
         return -PAL_ERROR_BADHANDLE;

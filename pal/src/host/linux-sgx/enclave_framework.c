@@ -1391,7 +1391,7 @@ int _PalStreamSecureSave(LIB_SSL_CONTEXT* ssl_ctx, const uint8_t** obuf, size_t*
     ret = lib_SSLSave(ssl_ctx, NULL, 0, olen);
     if (ret != 0 && ret != -PAL_ERROR_NOMEM)
     {
-        log_error("ret %d", ret);
+        // log_error("ret %d", ret);
         return ret;
     }
     /* create the required buffer */
