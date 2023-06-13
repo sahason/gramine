@@ -297,7 +297,7 @@ static struct libos_fs_ops fifo_fs_ops = {
     .read     = &pipe_read,
     .write    = &pipe_write,
     .setflags = &pipe_setflags,
-    .truncate = &pipe_truncate,
+    // .truncate = &pipe_truncate,
 };
 
 static struct libos_d_ops fifo_d_ops = {
