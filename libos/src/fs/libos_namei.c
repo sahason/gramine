@@ -419,7 +419,7 @@ int dentry_open(struct libos_handle* hdl, struct libos_dentry* dent, int flags) 
     if ((flags & O_TRUNC) && ((flags & O_RDWR) | (flags & O_WRONLY))
             && (dent->inode->type != S_IFDIR)
             && (dent->inode->type != S_IFLNK)
-            && (fs->name != "fifo")) {
+            && !strcmp(fs->name, "fifo")) {
 
         if (!(fs->fs_ops && fs->fs_ops->truncate))
         {
