@@ -327,8 +327,10 @@ struct libos_handle* detach_fd_handle(uint32_t fd, int* flags,
 
     rwlock_write_unlock(&handle_map->lock);
 
+    if (handle && (handle->id == 0 || handle->ref_count == 1)) {
     (void)clear_posix_locks(handle);
-
+    }
+    
     return handle;
 }
 
