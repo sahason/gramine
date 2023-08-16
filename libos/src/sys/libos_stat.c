@@ -167,7 +167,9 @@ out:
 }
 
 long libos_syscall_readlink(const char* file, char* buf, int bufsize) {
-    return libos_syscall_readlinkat(AT_FDCWD, file, buf, bufsize);
+    long l = libos_syscall_readlinkat(AT_FDCWD, file, buf, bufsize);
+    DEBUG_LOG("file %s buf %s\n", file, buf);
+    return l;
 }
 
 static int __do_statfs(struct libos_mount* mount, struct statfs* buf) {
