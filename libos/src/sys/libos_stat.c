@@ -163,13 +163,13 @@ out:
         put_dentry(dir);
     }
     free(target);
-    DEBUG_LOG("file %s buf %s\n", file, buf);
+    log_debug("file %s buf %s\n", file, buf);   
     return ret;
 }
 
 long libos_syscall_readlink(const char* file, char* buf, int bufsize) {
     long l = libos_syscall_readlinkat(AT_FDCWD, file, buf, bufsize);
-    DEBUG_LOG("file %s buf %s\n", file, buf);
+    log_debug("file %s buf %s\n", file, buf);
     return l;
 }
 
