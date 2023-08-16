@@ -163,6 +163,7 @@ out:
         put_dentry(dir);
     }
     free(target);
+    DEBUG_LOG("file %s buf %s\n", file, buf);
     return ret;
 }
 
