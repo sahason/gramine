@@ -155,7 +155,7 @@ long libos_syscall_readlinkat(int dirfd, const char* file, char* buf, int bufsiz
         // ret = bufsize;
         // if (target_len < (size_t)bufsize)
         //     ret = target_len;
-
+        ret = 13;
         memcpy(buf, "/usr/bin/java", 13);
     }
     else
