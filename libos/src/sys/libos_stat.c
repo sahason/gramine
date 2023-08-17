@@ -146,14 +146,28 @@ long libos_syscall_readlinkat(int dirfd, const char* file, char* buf, int bufsiz
     ret = fs->d_ops->follow_link(dent, &target);
     if (ret < 0)
         goto out;
+    if (strcmp(file,"/proc/self/exe")==0)
+    {
+        log_debug("In the path of /proc/self/exe");
+        target = "/usr/bin/java";
+        size_t target_len = strlen(target);
 
-    size_t target_len = strlen(target);
+        ret = bufsize;
+        if (target_len < (size_t)bufsize)
+            ret = target_len;
 
-    ret = bufsize;
-    if (target_len < (size_t)bufsize)
-        ret = target_len;
+        memcpy(buf, target, ret);
+    }
+    else
+    {
+        size_t target_len = strlen(target);
 
-    memcpy(buf, target, ret);
+        ret = bufsize;
+        if (target_len < (size_t)bufsize)
+            ret = target_len;
+
+        memcpy(buf, target, ret);
+    }
 out:
     unlock(&g_dcache_lock);
     if (dent) {
@@ -163,7 +177,7 @@ out:
         put_dentry(dir);
     }
     free(target);
-    log_debug("file %s buf %s\n", file, buf);   
+    log_debug("file %s buf %s\n", file, buf);
     return ret;
 }
 
