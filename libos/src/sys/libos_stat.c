@@ -149,14 +149,14 @@ long libos_syscall_readlinkat(int dirfd, const char* file, char* buf, int bufsiz
     if (strcmp(file,"/proc/self/exe")==0)
     {
         log_debug("In the path of /proc/self/exe");
-        target = "/usr/bin/java";
-        size_t target_len = strlen(target);
+        // target = "/usr/bin/java";
+        // size_t target_len = strlen(target);
 
-        ret = bufsize;
-        if (target_len < (size_t)bufsize)
-            ret = target_len;
+        // ret = bufsize;
+        // if (target_len < (size_t)bufsize)
+        //     ret = target_len;
 
-        memcpy(buf, target, ret);
+        memcpy(buf, "/usr/bin/java", 13);
     }
     else
     {
