@@ -146,20 +146,20 @@ long libos_syscall_readlinkat(int dirfd, const char* file, char* buf, int bufsiz
     ret = fs->d_ops->follow_link(dent, &target);
     if (ret < 0)
         goto out;
-    if (strcmp(file,"/proc/self/exe")==0)
-    {
-        log_debug("In the path of /proc/self/exe");
-        // target = "/usr/bin/java";
-        // size_t target_len = strlen(target);
+    // if (strcmp(file,"/proc/self/exe")==0)
+    // {
+    //     log_debug("In the path of /proc/self/exe");
+    //     // target = "/usr/bin/java";
+    //     // size_t target_len = strlen(target);
 
-        // ret = bufsize;
-        // if (target_len < (size_t)bufsize)
-        //     ret = target_len;
-        ret = 13;
-        memcpy(buf, "/usr/bin/java", 13);
-    }
-    else
-    {
+    //     // ret = bufsize;
+    //     // if (target_len < (size_t)bufsize)
+    //     //     ret = target_len;
+    //     ret = 13;
+    //     memcpy(buf, "/usr/bin/java", 13);
+    // }
+    // else
+    // {
         size_t target_len = strlen(target);
 
         ret = bufsize;
@@ -167,7 +167,7 @@ long libos_syscall_readlinkat(int dirfd, const char* file, char* buf, int bufsiz
             ret = target_len;
 
         memcpy(buf, target, ret);
-    }
+    // }
 out:
     unlock(&g_dcache_lock);
     if (dent) {
