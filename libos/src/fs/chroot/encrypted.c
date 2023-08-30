@@ -336,14 +336,14 @@ out:
     return ret;
 }
 
-static int chroot_encrypted_chmod(struct libos_dentry* dent, mode_t perm) {
+static int chroot_encrypted_chmod(struct libos_dentry* dent, struct libos_inode* inode, mode_t perm) {
     assert(locked(&g_dcache_lock));
-    assert(dent->inode);
+    assert(inode);
 
     char* uri = NULL;
-    lock(&dent->inode->lock);
+    lock(&inode->lock);
 
-    int ret = chroot_dentry_uri(dent, dent->inode->type, &uri);
+    int ret = chroot_dentry_uri(dent, inode->type, &uri);
     if (ret < 0)
         goto out;
 
@@ -362,13 +362,21 @@ static int chroot_encrypted_chmod(struct libos_dentry* dent, mode_t perm) {
         ret = pal_to_unix_errno(ret);
         goto out;
     }
-    dent->inode->perm = perm;
+    inode->perm = perm;
     ret = 0;
 
 out:
-    unlock(&dent->inode->lock);
+    unlock(&inode->lock);
     free(uri);
     return ret;
+}
+
+static int chroot_encrypted_fchmod(struct libos_handle* hdl, mode_t perm) {
+    return chroot_encrypted_chmod(hdl->dentry, hdl->dentry->inode, perm);
+}
+
+static int chroot_encrypted_fchmodat(struct libos_dentry* dent, mode_t perm) {
+    return chroot_encrypted_chmod(dent, dent->inode, perm);
 }
 
 static int chroot_encrypted_flush(struct libos_handle* hdl) {
@@ -497,7 +505,8 @@ struct libos_d_ops chroot_encrypted_d_ops = {
     .readdir       = &chroot_readdir, /* same as in `chroot` filesystem */
     .unlink        = &chroot_encrypted_unlink,
     .rename        = &chroot_encrypted_rename,
-    .chmod         = &chroot_encrypted_chmod,
+    .fchmod        = &chroot_encrypted_fchmod,
+    .fchmodat      = &chroot_encrypted_fchmodat,
     .idrop         = &chroot_encrypted_idrop,
 };
 

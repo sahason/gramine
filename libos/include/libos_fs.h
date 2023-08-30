@@ -376,6 +376,19 @@ struct libos_d_ops {
     /*
      * \brief Change file permissions.
      *
+     * \param dent  File handle.
+     * \param perm  New permissions for the file.
+     *
+     * Changes the permissions for a file.
+     *
+     * The caller should hold `g_dcache_lock`. On success, the caller should update
+     * `hdl->dentry->inode->perm`.
+     */
+    int (*fchmod)(struct libos_handle* hdl, mode_t perm);
+
+    /*
+     * \brief Change permissions of a file relative to a directory file descriptor.
+     *
      * \param dent  Dentry, positive.
      * \param perm  New permissions for the file.
      *
@@ -384,7 +397,7 @@ struct libos_d_ops {
      * The caller should hold `g_dcache_lock`. On success, the caller should update
      * `dent->inode->perm`.
      */
-    int (*chmod)(struct libos_dentry* dent, mode_t perm);
+    int (*fchmodat)(struct libos_dentry* dent, mode_t perm);
 
     /*
      * \brief Rename a file.

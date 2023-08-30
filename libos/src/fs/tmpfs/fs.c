@@ -205,10 +205,19 @@ static int tmpfs_rename(struct libos_dentry* old, struct libos_dentry* new) {
     return 0;
 }
 
-static int tmpfs_chmod(struct libos_dentry* dent, mode_t perm) {
+static int tmpfs_chmod(struct libos_dentry* dent, struct libos_inode* inode, mode_t perm) {
     __UNUSED(dent);
+    __UNUSED(inode);
     __UNUSED(perm);
     return 0;
+}
+
+static int tmpfs_fchmodat(struct libos_dentry* dent, mode_t perm) {
+    return tmpfs_chmod(dent, dent->inode, perm);
+}
+
+static int tmpfs_fchmod(struct libos_handle* hdl, mode_t perm) {
+    return tmpfs_chmod(hdl->dentry, hdl->dentry->inode, perm);
 }
 
 static ssize_t tmpfs_read(struct libos_handle* hdl, void* buf, size_t size, file_off_t* pos) {
@@ -313,7 +322,8 @@ struct libos_d_ops tmp_d_ops = {
     .readdir     = &generic_readdir,
     .unlink      = &tmpfs_unlink,
     .rename      = &tmpfs_rename,
-    .chmod       = &tmpfs_chmod,
+    .fchmod      = &tmpfs_fchmod,
+    .fchmodat    = &tmpfs_fchmodat,
     .idrop       = &tmpfs_idrop,
     .icheckpoint = &tmpfs_icheckpoint,
     .irestore    = &tmpfs_irestore,
