@@ -337,9 +337,6 @@ out:
 }
 
 static int chroot_encrypted_chmod(struct libos_dentry* dent, struct libos_inode* inode, mode_t perm) {
-    assert(locked(&g_dcache_lock));
-    assert(inode);
-
     char* uri = NULL;
     lock(&inode->lock);
 
@@ -372,10 +369,15 @@ out:
 }
 
 static int chroot_encrypted_fchmod(struct libos_handle* hdl, mode_t perm) {
-    return chroot_encrypted_chmod(hdl->dentry, hdl->dentry->inode, perm);
+    assert(locked(&g_dcache_lock));
+    assert(hdl->dentry);
+    assert(hdl->inode);
+    return chroot_encrypted_chmod(hdl->dentry, hdl->inode, perm);
 }
 
 static int chroot_encrypted_fchmodat(struct libos_dentry* dent, mode_t perm) {
+    assert(locked(&g_dcache_lock));
+    assert(dent->inode);
     return chroot_encrypted_chmod(dent, dent->inode, perm);
 }
 
