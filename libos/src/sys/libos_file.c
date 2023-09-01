@@ -186,8 +186,8 @@ long libos_syscall_fchmodat(int dfd, const char* filename, mode_t mode) {
         goto out;
 
     struct libos_fs* fs = dent->inode->fs;
-    if (fs && fs->d_ops && fs->d_ops->chmod) {
-        if ((ret = fs->d_ops->chmod(dent, perm)) < 0)
+    if (fs && fs->d_ops && fs->d_ops->fchmodat) {
+        if ((ret = fs->d_ops->fchmodat(dent, perm)) < 0)
             goto out_dent;
     }
 
@@ -221,23 +221,23 @@ long libos_syscall_fchmod(int fd, mode_t mode) {
         goto out;
     }
 
-    if (!dent->inode) {
+    if (!hdl->inode) {
         /* TODO: the `chmod` callback should take a handle, not dentry; otherwise we're not able to
          * chmod an unlinked file */
         ret = -ENOENT;
         goto out;
     }
 
-    struct libos_fs* fs = dent->inode->fs;
-    if (fs && fs->d_ops && fs->d_ops->chmod) {
-        ret = fs->d_ops->chmod(dent, perm);
+    struct libos_fs* fs = hdl->inode->fs;
+    if (fs && fs->d_ops && fs->d_ops->fchmod) {
+        ret = fs->d_ops->fchmod(hdl, perm);
         if (ret < 0)
             goto out;
     }
 
-    lock(&dent->inode->lock);
-    dent->inode->perm = perm;
-    unlock(&dent->inode->lock);
+    lock(&hdl->inode->lock);
+    hdl->inode->perm = perm;
+    unlock(&hdl->inode->lock);
 
 out:
     unlock(&g_dcache_lock);

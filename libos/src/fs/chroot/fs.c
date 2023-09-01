@@ -462,16 +462,13 @@ out:
     return ret;
 }
 
-static int chroot_chmod(struct libos_dentry* dent, mode_t perm) {
-    assert(locked(&g_dcache_lock));
-    assert(dent->inode);
-
+static int chroot_chmod(struct libos_dentry* dent, struct libos_inode* inode, mode_t perm) {
     int ret;
 
-    lock(&dent->inode->lock);
+    lock(&inode->lock);
 
     PAL_HANDLE palhdl;
-    ret = chroot_temp_open(dent, dent->inode->type, &palhdl);
+    ret = chroot_temp_open(dent, inode->type, &palhdl);
     if (ret < 0)
         goto out;
 
@@ -484,12 +481,25 @@ static int chroot_chmod(struct libos_dentry* dent, mode_t perm) {
         goto out;
     }
 
-    dent->inode->perm = perm;
+    inode->perm = perm;
     ret = 0;
 
 out:
-    unlock(&dent->inode->lock);
+    unlock(&inode->lock);
     return ret;
+}
+
+static int chroot_fchmod(struct libos_handle* hdl, mode_t perm) {
+    assert(locked(&g_dcache_lock));
+    assert(hdl->dentry);
+    assert(hdl->inode);
+    return chroot_chmod(hdl->dentry, hdl->inode, perm);
+}
+
+static int chroot_fchmodat(struct libos_dentry* dent, mode_t perm) {
+    assert(locked(&g_dcache_lock));
+    assert(dent->inode);
+    return chroot_chmod(dent, dent->inode, perm);
 }
 
 struct libos_fs_ops chroot_fs_ops = {
@@ -516,7 +526,8 @@ struct libos_d_ops chroot_d_ops = {
     .readdir = &chroot_readdir,
     .unlink  = &chroot_unlink,
     .rename  = &chroot_rename,
-    .chmod   = &chroot_chmod,
+    .fchmod  = &chroot_fchmod,
+    .fchmodat= &chroot_fchmodat,
 };
 
 struct libos_fs chroot_builtin_fs = {
